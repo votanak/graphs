@@ -19,7 +19,7 @@ import { format } from 'd3-format';
 import { TimeSeries } from 'pondjs';
 
 // Imports from the charts library
-import { ChartContainer } from 'react-timeseries-charts';
+import ChartContainer from 'react-timeseries-charts/ChartContainer';
 import ChartRow from 'react-timeseries-charts/ChartRow';
 import Charts from 'react-timeseries-charts/Charts';
 import YAxis from 'react-timeseries-charts/YAxis';
