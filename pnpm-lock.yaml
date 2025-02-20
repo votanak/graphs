@@ -12,14 +12,14 @@ importers:
         specifier: ^0.8.0
         version: 0.8.0
       react:
-        specifier: ^16.0.0
-        version: 16.0.0
+        specifier: 16.4.2
+        version: 16.4.2
       react-dom:
-        specifier: ^16.0.0
-        version: 16.0.0(react@16.0.0)
+        specifier: ^16.4.2
+        version: 16.4.2(react@16.4.2)
       react-timeseries-charts:
         specifier: ^0.16.1
-        version: 0.16.1(pondjs@0.8.0)(react@16.0.0)
+        version: 0.16.1(pondjs@0.8.0)(react@16.4.2)
     devDependencies:
       '@eslint/js':
         specifier: ^9.19.0
@@ -1269,11 +1269,10 @@ packages:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
 
-  react-dom@16.0.0:
-    resolution: {integrity: sha512-MjJdK6es/HG+kcjpa6eRhXrusL4hh4omy/036mI7uykjredUkk8Z0E6FzJW+g3JBR2bxov8AQxiE71WDlja6dw==}
-    deprecated: 'This version of react-dom/server contains a minor vulnerability. Please update react-dom to 16.0.1 or 16.4.2+. Learn more: https://fb.me/cve-2018-6341'
+  react-dom@16.4.2:
+    resolution: {integrity: sha512-Usl73nQqzvmJN+89r97zmeUpQDKDlh58eX6Hbs/ERdDHzeBzWy+ENk7fsGQ+5KxArV1iOFPT46/VneklK9zoWw==}
     peerDependencies:
-      react: ^16.0.0-beta.5
+      react: ^16.0.0
 
   react-hot-loader@4.1.2:
     resolution: {integrity: sha512-7EFwgpJOx4AG4pwVifgr/ZNBPAxl2z424nGJPc/APB3F8YtCA3WdYuGlcerRK2C9vYAoqiiLw745IB3wjnzrRQ==}
@@ -1297,8 +1296,8 @@ packages:
       pondjs: ^0.8.0
       react: ^15.3.1 || ^16.0
 
-  react@16.0.0:
-    resolution: {integrity: sha512-9lay736NuQpSpNwkxcqHOD/Jswpi/C5C7TYqHU9Xi19OEM+3LEkULYsUc3E65W+Sv3AyoVi2ZovCuXi2Ifz1MQ==}
+  react@16.4.2:
+    resolution: {integrity: sha512-dMv7YrbxO4y2aqnvA7f/ik9ibeLSHQJTI6TrYAenPSaQ6OXfb+Oti+oJiy8WBxgRzlKatYqtCjphTgDSCEiWFg==}
     engines: {node: '>=0.10.0'}
 
   reflect.getprototypeof@1.0.10:
@@ -2863,21 +2862,21 @@ snapshots:
 
   punycode@2.3.1: {}
 
-  react-dom@16.0.0(react@16.0.0):
+  react-dom@16.4.2(react@16.4.2):
     dependencies:
       fbjs: 0.8.18
       loose-envify: 1.4.0
       object-assign: 4.1.1
       prop-types: 15.8.1
-      react: 16.0.0
+      react: 16.4.2
 
-  react-hot-loader@4.1.2(react@16.0.0):
+  react-hot-loader@4.1.2(react@16.4.2):
     dependencies:
       fast-levenshtein: 2.0.6
       global: 4.4.0
       hoist-non-react-statics: 2.5.5
       prop-types: 15.8.1
-      react: 16.0.0
+      react: 16.4.2
       react-lifecycles-compat: 3.0.4
       shallowequal: 1.1.0
 
@@ -2887,7 +2886,7 @@ snapshots:
 
   react-refresh@0.14.2: {}
 
-  react-timeseries-charts@0.16.1(pondjs@0.8.0)(react@16.0.0):
+  react-timeseries-charts@0.16.1(pondjs@0.8.0)(react@16.4.2):
     dependencies:
       array.prototype.fill: 1.0.2
       babel-runtime: 6.26.0
@@ -2911,11 +2910,11 @@ snapshots:
       moment-duration-format: 1.3.0
       pondjs: 0.8.0
       prop-types: 15.8.1
-      react: 16.0.0
-      react-hot-loader: 4.1.2(react@16.0.0)
+      react: 16.4.2
+      react-hot-loader: 4.1.2(react@16.4.2)
       underscore: 1.13.7
 
-  react@16.0.0:
+  react@16.4.2:
     dependencies:
       fbjs: 0.8.18
       loose-envify: 1.4.0
