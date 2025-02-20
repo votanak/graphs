@@ -1,220 +1,113 @@
-/**
- *  Copyright (c) 2015, The Regents of the University of California,
- *  through Lawrence Berkeley National Laboratory (subject to receipt
- *  of any required approvals from the U.S. Dept. of Energy).
- *  All rights reserved.
- *
- *  This source code is licensed under the BSD-style license found in the
- *  LICENSE file in the root directory of this source tree.
- */
-
-/* eslint max-len:0 */
-
 import React from 'react';
-import _ from 'underscore';
+import PropTypes from 'prop-types';
 
 import { format } from 'd3-format';
+import { timeFormat } from 'd3-time-format';
 
-// Pond
-import { TimeSeries } from 'pondjs';
+import { ChartCanvas, Chart } from 'react-stockcharts';
+import {
+  ScatterSeries,
+  SquareMarker,
+  TriangleMarker,
+  CircleMarker,
+  LineSeries,
+} from 'react-stockcharts/lib/series';
+import { XAxis, YAxis } from 'react-stockcharts/lib/axes';
+import {
+  CrossHairCursor,
+  MouseCoordinateX,
+  MouseCoordinateY,
+} from 'react-stockcharts/lib/coordinates';
 
-// Imports from the charts library
-import ChartContainer from 'react-timeseries-charts/ChartContainer';
-import ChartRow from 'react-timeseries-charts/ChartRow';
-import Charts from 'react-timeseries-charts/Charts';
-import YAxis from 'react-timeseries-charts/YAxis';
-import LineChart from 'react-timeseries-charts/LineChart';
-import Baseline from 'react-timeseries-charts/Baseline';
-import Legend from 'react-timeseries-charts/Legend';
-import Resizable from 'react-timeseries-charts/Resizable';
-import styler from './js/styler';
+import { discontinuousTimeScaleProvider } from 'react-stockcharts/lib/scale';
+import { OHLCTooltip } from 'react-stockcharts/lib/tooltip';
+import { fitWidth } from 'react-stockcharts/lib/helper';
+import { last } from 'react-stockcharts/lib/utils';
 
-import currency_thumbnail from './currency_thumbnail.png';
-
-// Data
-const aud = require('./usd_vs_aud.json');
-const euro = require('./usd_vs_euro.json');
-
-function buildPoints() {
-  const audPoints = aud.widget[0].data.reverse();
-  const euroPoints = euro.widget[0].data.reverse();
-  let points = [];
-  for (let i = 0; i < audPoints.length; i++) {
-    points.push([audPoints[i][0], audPoints[i][1], euroPoints[i][1]]);
-  }
-  return points;
-}
-
-const currencySeries = new TimeSeries({
-  name: 'Currency',
-  columns: ['time', 'aud', 'euro'],
-  points: buildPoints(),
-});
-
-const style = styler([
-  { key: 'aud', color: 'steelblue', width: 2 },
-  { key: 'euro', color: '#F68B24', width: 2 },
-]);
-
-class CrossHairs extends React.Component {
+class LineAndScatterChart extends React.Component {
   render() {
-    const { x, y } = this.props;
-    const style = { pointerEvents: 'none', stroke: '#ccc' };
-    if (!_.isNull(x) && !_.isNull(y)) {
-      return (
-        <g>
-          <line style={style} x1={0} y1={y} x2={this.props.width} y2={y} />
-          <line style={style} x1={x} y1={0} x2={x} y2={this.props.height} />
-        </g>
-      );
-    } else {
-      return <g />;
-    }
-  }
-}
-
-class Currency extends React.Component {
-  state = {
-    tracker: null,
-    timerange: currencySeries.range(),
-    x: null,
-    y: null,
-  };
-
-  handleTrackerChanged = (tracker) => {
-    if (!tracker) {
-      this.setState({ tracker, x: null, y: null });
-    } else {
-      this.setState({ tracker });
-    }
-  };
-
-  handleTimeRangeChange = (timerange) => {
-    this.setState({ timerange });
-  };
-
-  handleMouseMove = (x, y) => {
-    this.setState({ x, y });
-  };
-
-  render() {
-    const f = format('$,.2f');
-    const range = this.state.timerange;
-
-    let euroValue, audValue;
-    if (this.state.tracker) {
-      const index = currencySeries.bisect(this.state.tracker);
-      const trackerEvent = currencySeries.at(index);
-      audValue = `${f(trackerEvent.get('aud'))}`;
-      euroValue = `${f(trackerEvent.get('euro'))}`;
-    }
-
+    const { data: initialData, type, width, ratio } = this.props;
+    const xScaleProvider = discontinuousTimeScaleProvider.inputDateAccessor(
+      (d) => d.date,
+    );
+    const { data, xScale, xAccessor, displayXAccessor } =
+      xScaleProvider(initialData);
+    const xExtents = [xAccessor(last(data)), xAccessor(data[data.length - 20])];
     return (
-      <div>
-        <div className="row">
-          <div className="col-md-12">
-            <Resizable>
-              <ChartContainer
-                timeRange={range}
-                timeAxisStyle={{
-                  ticks: {
-                    stroke: '#AAA',
-                    opacity: 0.25,
-                    'stroke-dasharray': '1,1',
-                    // Note: this isn't in camel case because this is
-                    // passed into d3's style
-                  },
-                  values: {
-                    fill: '#AAA',
-                    'font-size': 12,
-                  },
-                }}
-                showGrid={true}
-                paddingRight={100}
-                maxTime={currencySeries.range().end()}
-                minTime={currencySeries.range().begin()}
-                timeAxisAngledLabels={true}
-                timeAxisHeight={65}
-                onTrackerChanged={this.handleTrackerChanged}
-                onBackgroundClick={() => this.setState({ selection: null })}
-                enablePanZoom={true}
-                onTimeRangeChanged={this.handleTimeRangeChange}
-                onMouseMove={(x, y) => this.handleMouseMove(x, y)}
-                minDuration={1000 * 60 * 60 * 24 * 30}>
-                <ChartRow height="400">
-                  <YAxis
-                    id="y"
-                    label="Price ($)"
-                    min={0.5}
-                    max={1.5}
-                    style={{
-                      ticks: {
-                        stroke: '#AAA',
-                        opacity: 0.25,
-                        'stroke-dasharray': '1,1',
-                        // Note: this isn't in camel case because this is
-                        // passed into d3's style
-                      },
-                    }}
-                    showGrid
-                    hideAxisLine
-                    width="60"
-                    type="linear"
-                    format="$,.2f"
-                  />
-                  <Charts>
-                    <LineChart
-                      axis="y"
-                      breakLine={false}
-                      series={currencySeries}
-                      columns={['aud', 'euro']}
-                      style={style}
-                      interpolation="curveBasis"
-                      highlight={this.state.highlight}
-                      onHighlightChange={(highlight) =>
-                        this.setState({ highlight })
-                      }
-                      selection={this.state.selection}
-                      onSelectionChange={(selection) =>
-                        this.setState({ selection })
-                      }
-                    />
-                    <CrossHairs x={this.state.x} y={this.state.y} />
-                    <Baseline
-                      axis="y"
-                      value={1.0}
-                      label="USD Baseline"
-                      position="right"
-                    />
-                  </Charts>
-                </ChartRow>
-              </ChartContainer>
-            </Resizable>
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-md-12">
-            <span>
-              <Legend
-                type="line"
-                align="right"
-                style={style}
-                highlight={this.state.highlight}
-                onHighlightChange={(highlight) => this.setState({ highlight })}
-                selection={this.state.selection}
-                onSelectionChange={(selection) => this.setState({ selection })}
-                categories={[
-                  { key: 'aud', label: 'AUD', value: audValue },
-                  { key: 'euro', label: 'Euro', value: euroValue },
-                ]}
-              />
-            </span>
-          </div>
-        </div>
-      </div>
+      <ChartCanvas
+        ratio={ratio}
+        width={width}
+        height={400}
+        margin={{ left: 70, right: 70, top: 20, bottom: 30 }}
+        type={type}
+        pointsPerPxThreshold={1}
+        seriesName="MSFT"
+        data={data}
+        xAccessor={xAccessor}
+        displayXAccessor={displayXAccessor}
+        xScale={xScale}
+        xExtents={xExtents}>
+        <Chart id={1} yExtents={(d) => [d.high, d.low, d.AAPLClose, d.GEClose]}>
+          <XAxis axisAt="bottom" orient="bottom" />
+          <YAxis
+            axisAt="right"
+            orient="right"
+            // tickInterval={5}
+            // tickValues={[40, 60]}
+            ticks={5}
+          />
+          <MouseCoordinateX
+            at="bottom"
+            orient="bottom"
+            displayFormat={timeFormat('%Y-%m-%d')}
+          />
+          <MouseCoordinateY
+            at="right"
+            orient="right"
+            displayFormat={format('.2f')}
+          />
+
+          <LineSeries
+            yAccessor={(d) => d.AAPLClose}
+            stroke="#ff7f0e"
+            strokeDasharray="Dot"
+          />
+          <ScatterSeries
+            yAccessor={(d) => d.AAPLClose}
+            marker={SquareMarker}
+            markerProps={{ width: 6, stroke: '#ff7f0e', fill: '#ff7f0e' }}
+          />
+          <LineSeries yAccessor={(d) => d.GEClose} stroke="#2ca02c" />
+          <ScatterSeries
+            yAccessor={(d) => d.GEClose}
+            marker={TriangleMarker}
+            markerProps={{ width: 8, stroke: '#2ca02c', fill: '#2ca02c' }}
+          />
+          <LineSeries yAccessor={(d) => d.close} strokeDasharray="LongDash" />
+          <ScatterSeries
+            yAccessor={(d) => d.close}
+            marker={CircleMarker}
+            markerProps={{ r: 3 }}
+          />
+          <OHLCTooltip forChart={1} origin={[-40, 0]} />
+        </Chart>
+
+        <CrossHairCursor />
+      </ChartCanvas>
     );
   }
 }
 
-// Export example
-export default { Currency, currency_thumbnail };
+LineAndScatterChart.propTypes = {
+  data: PropTypes.array.isRequired,
+  width: PropTypes.number.isRequired,
+  ratio: PropTypes.number.isRequired,
+  type: PropTypes.oneOf(['svg', 'hybrid']).isRequired,
+};
+
+LineAndScatterChart.defaultProps = {
+  type: 'svg',
+};
+LineAndScatterChart = fitWidth(LineAndScatterChart);
+
+export default LineAndScatterChart;

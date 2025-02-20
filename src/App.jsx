@@ -1,9 +1,9 @@
-import Currency from './Currency1';
+import { LineAndScatterChart } from './Currency1';
 
 function App() {
   return (
     <>
-      <Currency />
+      <LineAndScatterChart />
     </>
   );
 }
