@@ -19,17 +19,16 @@ import { format } from 'd3-format';
 import { TimeSeries } from 'pondjs';
 
 // Imports from the charts library
-import ChartContainer from '../../../../../components/ChartContainer';
-import ChartRow from '../../../../../components/ChartRow';
-import Charts from '../../../../../components/Charts';
-import YAxis from '../../../../../components/YAxis';
-import LineChart from '../../../../../components/LineChart';
-import Baseline from '../../../../../components/Baseline';
-import Legend from '../../../../../components/Legend';
-import Resizable from '../../../../../components/Resizable';
-import styler from '../../../../../js/styler';
+import { ChartContainer } from 'react-timeseries-charts';
+import ChartRow from 'react-timeseries-charts/ChartRow';
+import Charts from 'react-timeseries-charts/Charts';
+import YAxis from 'react-timeseries-charts/YAxis';
+import LineChart from 'react-timeseries-charts/LineChart';
+import Baseline from 'react-timeseries-charts/Baseline';
+import Legend from 'react-timeseries-charts/Legend';
+import Resizable from 'react-timeseries-charts/Resizable';
+import styler from './js/styler';
 
-import currency_docs from './currency_docs.md';
 import currency_thumbnail from './currency_thumbnail.png';
 
 // Data
@@ -74,7 +73,7 @@ class CrossHairs extends React.Component {
   }
 }
 
-class currency extends React.Component {
+class Currency extends React.Component {
   state = {
     tracker: null,
     timerange: currencySeries.range(),
@@ -218,4 +217,4 @@ class currency extends React.Component {
 }
 
 // Export example
-export default { currency, currency_docs, currency_thumbnail };
+export default { Currency, currency_thumbnail };
