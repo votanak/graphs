@@ -1,9 +1,11 @@
-import { LineAndScatterChart } from './Currency1';
+import ChartComponent from './ChartComponent';
+import './App.css';
 
 function App() {
   return (
     <>
-      <LineAndScatterChart />
+      <div>sadfa</div>
+      <ChartComponent />
     </>
   );
 }
