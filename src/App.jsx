@@ -1,11 +1,10 @@
-import ChartComponent from './ChartComponent';
+import Chart from './Chart';
 import './App.css';
 
 function App() {
   return (
     <>
-      <div>sadfa</div>
-      <ChartComponent />
+      <Chart />
     </>
   );
 }
